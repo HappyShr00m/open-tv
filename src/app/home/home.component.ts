@@ -16,6 +16,7 @@ export class HomeComponent implements AfterViewInit  {
 
   channels: Channel[] = [];
   @ViewChild('search') search!: ElementRef;
+  @ViewChild('container') container!: ElementRef;
   readonly elementsToRetrieve = 36;
 
   constructor(private router: Router, public memory: MemoryService) {
@@ -44,6 +45,13 @@ export class HomeComponent implements AfterViewInit  {
     ).subscribe((term: string) => {
       this.filterChannels(term);
     });
+    //setNumberOfChannels();
+  }
+
+  setNumberOfChannels(height: number, width: number){
+    let rem = parseInt(getComputedStyle(document.documentElement).fontSize);
+    let rows = height / rem / 10;
+    let cols = 2;
   }
 
   getChannels(){
