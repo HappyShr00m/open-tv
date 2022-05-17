@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { invoke } from '@tauri-apps/api';
 import { ToastrService } from 'ngx-toastr';
+import { Category } from './models/category';
 import { Channel } from './models/channel';
 
 @Injectable({
@@ -8,9 +10,11 @@ import { Channel } from './models/channel';
 })
 export class MemoryService {
 
-  constructor(private toast: ToastrService) { }
+  constructor(private toast: ToastrService, private router: Router) { }
   private currentChannelInterval?: any;
   public Channels: Channel[] = [];
+  public Categories: Category[] = [];
+  public Favorites: Channel[] = [];
   private _currentChannel?: string;
   get CurrentChannel() {
     return this._currentChannel;
@@ -34,5 +38,17 @@ export class MemoryService {
         this.currentChannelInterval = null;
       }
     });
+  }
+
+  retrieveChannels(){
+    invoke("get_cache").then(x => {
+      if (x) {
+       this.Channels = x as Channel[];
+       return true;
+      }
+      if (this.Channels?.length == 0)
+        this.router.navigateByUrl("setup");
+    });
+    return false;
   }
 }

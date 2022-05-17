@@ -3,7 +3,9 @@ import { Router } from '@angular/router';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { invoke } from '@tauri-apps/api/tauri';
 import { debounceTime, distinctUntilChanged, filter, fromEvent, map, Subject, tap } from 'rxjs';
+import { Mode } from 'src/app/models/mode';
 import { MemoryService } from '../memory.service';
+import { Category } from '../models/category';
 import { Channel } from '../models/channel';
 import { SettingsComponent } from '../settings/settings.component';
 
@@ -12,26 +14,19 @@ import { SettingsComponent } from '../settings/settings.component';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements AfterViewInit  {
+export class HomeComponent implements AfterViewInit {
 
-  channels: Channel[] = [];
+  all: Channel[] = [];
+  categories: Category[] = [];
   @ViewChild('search') search!: ElementRef;
   readonly elementsToRetrieve = 36;
+  currentMode = Mode.All;
+  Mode = Mode;
 
   constructor(private router: Router, public memory: MemoryService) {
-    if (this.memory.Channels.length > 0){
+    if (this.memory.Channels.length > 0 || this.memory.retrieveChannels()) {
       this.getChannels();
     }
-    else {
-      invoke("get_cache").then(x => {
-        if (x) {
-          this.memory.Channels = x as Channel[];
-          this.getChannels();
-        }
-        if (memory.Channels?.length == 0)
-          router.navigateByUrl("setup");
-      });
-    }      
   }
 
   ngAfterViewInit(): void {
@@ -46,17 +41,24 @@ export class HomeComponent implements AfterViewInit  {
     });
   }
 
-  getChannels(){
-    this.channels = this.memory.Channels.slice(0, this.elementsToRetrieve);
+  SwitchToAll(){
+    if(this.currentMode == Mode.All)
+      return;
+    
   }
 
-  filterChannels(term: string){
-    this.channels = this.memory.Channels
+  getChannels() {
+    this.all = this.memory.Channels.slice(0, this.elementsToRetrieve);
+    this.categories = [...this.memory.Categories];
+  }
+
+  filterChannels(term: string) {
+    this.all = this.memory.Channels
       .filter(y => y.name.toLowerCase().indexOf(term.toLowerCase()) > -1)
       .slice(0, this.elementsToRetrieve)
   }
 
-  openSettings(){
+  openSettings() {
     this.router.navigateByUrl("settings");
   }
 }
