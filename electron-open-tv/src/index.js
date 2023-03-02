@@ -1,15 +1,11 @@
-import { app, BrowserWindow, shell, ipcMain, dialog } from 'electron'
-import { release } from 'node:os'
-import { join, dirname } from 'node:path'
-import { createReadStream, existsSync } from 'node:fs'
-import { readFile, writeFile, mkdir, unlink } from 'node:fs/promises'
-import * as readLine from 'node:readline'
-import { exec } from 'node:child_process'
-import { lookpath } from 'lookpath'
-
-if (require('electron-squirrel-startup')) {
-  app.quit();
-}
+const { app, BrowserWindow, shell, ipcMain, dialog } = require('electron');
+const { release } = require('node:os')
+const { join, dirname } = require('node:path')
+const { createReadStream, existsSync } = require('node:fs')
+const { readFile, writeFile, mkdir, unlink } = require('node:fs/promises');
+const readLine = require('node:readline');
+const { exec } = require('node:child_process');
+const { lookpath } = require('lookpath');
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const homeDirectory = getHomeDirectory();
@@ -37,9 +33,9 @@ if (!app.requestSingleInstanceLock()) {
 // process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true'
 
 let win = null
-const preload = MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY;
+const preload = join(__dirname, "preload.js");
 const url = "http://localhost:4200";
-const indexHtml = join(__dirname, 'index.html');
+const indexHtml = join(__dirname, '..', 'dist', 'index.html');
 
 async function createWindow() {
   win = new BrowserWindow({
@@ -48,7 +44,7 @@ async function createWindow() {
       preload,
       nodeIntegration: false,
       contextIsolation: true,
-      devTools: process.env.DEVMODE ?? false
+      devTools: false
     },
   })
 
@@ -167,7 +163,7 @@ async function parsePlaylist(filePath) {
         }
         if (!channel.name || !channel.name?.trim())
           channel.name = firstLine.match(idRegExp)?.groups?.id;
-          
+
         if (channel.name && channel.name?.trim() && channel.url && channel.url?.trim()) {
           channels.push(channel);
         }
@@ -230,7 +226,7 @@ async function fixMPV() {
   if (process.platform == "win32") {
     let mpvExists = await lookpath("mpv");
     if (!mpvExists) {
-      mpvPath = join(__dirname, '..', 'libs', 'mpv.exe');
+      mpvPath = join(__dirname, '..', '..', 'libs', 'mpv.exe');
     }
   }
 }

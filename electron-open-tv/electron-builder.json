@@ -1,0 +1,42 @@
+{
+  "asar": true,
+  "directories": {
+    "output": "release/"
+  },
+  "files": [
+    "**/*",
+    "!**/*.ts",
+    "!*.map",
+    "!package.json",
+    "!package-lock.json",
+    {
+      "from": "../ng-open-tv/dist/ng-open-tv",
+      "filter": ["**/*"],
+      "to": "dist"
+    }
+  ],
+  "extraResources": [
+    {
+      "from": "../../libs",
+      "to": "libs"
+    }
+  ],
+  "win": {
+    "target": [
+      "appx"
+    ]
+  },
+  "appx": {
+    "applicationId": "OpenTV"
+  },
+  "mac": {
+    "target": [
+      "dmg"
+    ]
+  },
+  "linux": {
+    "target": [
+      "AppImage"
+    ]
+  }
+}

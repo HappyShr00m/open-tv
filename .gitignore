@@ -1,5 +1,4 @@
 .DS_STORE
-
 /dist/
 /bazel-out
 /integration/bazel/bazel-*
@@ -61,3 +60,4 @@ aio/content/examples/.DS_Store
 ng-open-tv/.angular/cache
 ng-open-tv/dist
 electron-open-tv/out
+electron-open-tv/release
