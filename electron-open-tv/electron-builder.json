@@ -23,11 +23,16 @@
   ],
   "win": {
     "target": [
-      "appx"
+      "squirrel"
     ]
   },
+  "squirrelWindows":
+  {
+    "iconUrl": "https://upload.wikimedia.org/wikipedia/commons/4/48/BLANK_ICON.png"
+  },
   "appx": {
-    "applicationId": "OpenTV"
+    "applicationId": "OpenTV",
+    "publisher": "CN=AppModelSamples, OID.2.25.311729368913984317654407730594956997722=1"
   },
   "mac": {
     "target": [
